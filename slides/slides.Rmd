@@ -16,6 +16,7 @@ link-citations: yes
 ```{r setup, include=FALSE}
 library(citr)
 library(tidyverse)
+library(stringi)
 library(ggthemes)
 library(kableExtra)
 library(knitr)
@@ -83,11 +84,12 @@ slides > slide.backdrop {
 
 ## what is data visualisation?
 
-- statistics: graphical data analysis
-- design: communication and perception
+- graphical representation of data
+- graphical data analysis (stats): what do we want to know?
+- communication and perception (design): what do we want to communicate?
 - exploratory plots: confirm and analyse data (small specialist audience)
 - explanatory plots: inform and persuade (wide audience)
-- advice: think about your audience
+- advice: think about the audience
 
 
 ## exploring data
@@ -201,7 +203,7 @@ ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
 - understanding patterns (beyond descriptives)
 - selecting appropriate stats
 - communication of findings
-- persuation of audience
+- persuasion of audience
 
 
 ## Anscombe's quartet | @anscombe1973graphs and @tufte1989
@@ -281,8 +283,7 @@ summary(tdd)
 ## basic principles 
 
 - going beyond summary statistics
-- descriptive summary statistics may conceale / obscure important patterns
-- appropriate stats
+- descriptive summary statistics may conceal / obscure important patterns
 - prevent wrong conclusions about data / theory
 - visualisation helps us to understand patterns, structures, relationships
 - see e.g. Anscombe's Quartet
@@ -321,27 +322,29 @@ glimpse(mammals)
 ## exercise 1 | creating (gg)plots in R
 
 - open script **exercises/Exercise 1.R**
-- read and follow the instructions in the comments.
-- you will need to replace the "_ _ _"s accordingly.
+- read and follow the instructions in the comments
+- fill in the **_____**s
 - run your code (not the entire script): **CTRL+Enter**
 
 # grammar of graphics
 
+## grammar of graphics 
+
+- **gg**plot2 builds on the grammar of graphics [@wickham2016ggplot2;@wickham2010layered]
+- higher-level plotting system compared to base R functions (e.g. plot(), hist()) 
+- complex visualisations can be creased with a minimal amount of code
+- integration of statistical information
+
 ## grammar of graphics | @wilkinson1999statistics
 
 - graphics are build on an underlying grammar
-- system of rules for mapping variables to properties to visualise data
+- system of rules for mapping variables to graphical properties
 - i.e. ingredients (1) and the recipe (2)
 - principle 1: graphics consist of distinct layers of grammatical elements (data, aesthetics, geometries)
 - principle 2: ... are build around aesthetic mappings
 
 
-## grammar of graphics 
 
-- **gg**plot2 builds on these principles [@wickham2016ggplot2;@wickham2010layered]
-- higher-level plotting system compared to base R functions (e.g. plot(), hist()) 
-- complex visualisations can be creased with a minimal amount of code
-- integration of statistical information
 
 
 ## grammatical elements
@@ -389,7 +392,7 @@ ggplot(data = horses, mapping = aes(y = Price, x = Age, colour = Sex)) +
 
 ## optional grammatical elements
 
-- **facets:** deviding data into subplots
+- **facets:** dividing data into subplots
 - **statistics:** summarising representations
 - **coordinates:** plotting space
 - **theme:** visual properties not related to the data (font, background)
@@ -423,7 +426,7 @@ ggplot(data = horses, aes(y = Price, x = Age))
 
 ```{r  out.width="75%"}
 ggplot(data = horses, aes(y = Price, x = Age)) +
-  geom_point(size = .25)
+  geom_point(size = .5)
 ```
 </div>
 
@@ -441,7 +444,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 
 ```{r  out.width="75%"}
 ggplot(data = horses, aes(y = Price, x = Age)) +
-  geom_point(size = .25) +
+  geom_point(size = .5) +
   facet_grid( ~ Sex)
 ```
 </div>
@@ -461,7 +464,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 
 ```{r  out.width="75%"}
 ggplot(data = horses, aes(y = Price, x = Age)) +
-  geom_point(size = .25) +
+  geom_point(size = .5) +
   facet_grid( ~ Sex) +
   stat_smooth(method = "lm", se = FALSE, fullrange = TRUE) 
 ```
@@ -484,7 +487,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 
 ```{r  out.width="75%"}
 ggplot(data = horses, aes(y = Price, x = Age)) +
-  geom_point(size = .25) +
+  geom_point(size = .5) +
   facet_grid( ~ Sex) +
   stat_smooth(method = "lm", se = FALSE, fullrange = TRUE) +
   coord_fixed(ratio = 2/25000)
@@ -508,7 +511,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 
 ```{r  out.width="75%"}
 ggplot(data = horses, aes(y = Price, x = Age)) +
-  geom_point(size = .25) +
+  geom_point(size = .5) +
   facet_grid( ~ Sex) +
   stat_smooth(method = "lm", se = FALSE, fullrange = TRUE) +
   coord_trans(x = "log", y = "reverse")
@@ -533,7 +536,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 
 ```{r  out.width="75%"}
 ggplot(data = horses, aes(y = Price, x = Age)) +
-  geom_point(size = .25) +
+  geom_point(size = .5) +
   facet_grid( ~ Sex) +
   stat_smooth(method = "lm", se = FALSE, fullrange = TRUE) +
   coord_flip()
@@ -542,19 +545,6 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 </div>
 
 
-
-
-## ggplot2: layers of grammatical elements
-
-<div style="float: left; width: 28%;">
-- data
-- aesthetics
-- geometries
-- facets
-- statistics
-- coordinates
-- theme
-</div>
 
 
 
@@ -601,8 +591,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
   geom_point(size = .25) +
   facet_grid( ~ Sex) +
   stat_smooth(method = "lm", se = FALSE, fullrange = TRUE) +
-  theme(strip.text = element_text(hjust = 0),
-        panel.background = element_blank()) 
+  theme(panel.background = element_blank()) 
 ```
 </div>
 
@@ -620,33 +609,138 @@ glimpse(weight)
 
 - open script **exercises/Exercise 2a.R**
 - read and follow the instructions
-- replace the **___**s accordingly
+- fill in the **____**s
 - run code (not the entire script): **CTRL+Enter**
 - bonus: **exercises/Exercise 2b.R**
 
 
 
-## aesthetics and attributes | e.g. colour, fill, size, shape, alpha
+## aesthetics and attributes
 
-<div style="float: left; width: 40%;">
-- attributes take a property
-- aesthetics take variables: inside aes()
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
 </div>
 
-<div style="float: right; width: 55%;">
+<div style="float: right; width: 63%;">
 
-```{r  out.width="95%"}
+```{r  out.width="97%"}
 ggplot(horses, aes(y = Price, x = Age)) +
   geom_point(colour = "red")
 ```
 
 </div>
 
+## aesthetics and attributes
+
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
+</div>
+
+<div style="float: right; width: 63%;">
+
+```{r  out.width="97%"}
+ggplot(horses, aes(y = Price, x = Age)) +
+  geom_point(aes(colour = "red"))
+```
+
+
+## aesthetics and attributes
+
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
+</div>
+
+<div style="float: right; width: 63%;">
+
+```{r  out.width="97%"}
+ggplot(horses, aes(y = Price, x = Age)) +
+  geom_point(aes(colour = Sex))
+```
+
+</div>
+
+
+## aesthetics and attributes
+
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
+</div>
+
+<div style="float: right; width: 63%;">
+
+```{r  out.width="97%"}
+ggplot(horses, aes(y = Price, x = Age)) +
+  geom_point(aes(colour = Sex)) +
+  geom_smooth(method = "lm")
+```
+
+## aesthetics and attributes
+
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
+</div>
+
+<div style="float: right; width: 63%;">
+
+```{r  out.width="97%"}
+ggplot(horses, aes(y = Price, x = Age)) +
+  geom_point() +
+  geom_smooth(aes(colour = Sex), method = "lm")
+```
+
+## aesthetics and attributes
+
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
+</div>
+
+<div style="float: right; width: 63%;">
+
+```{r  out.width="97%"}
+ggplot(horses, aes(y = Price, x = Age)) +
+  geom_point(aes(colour = Sex)) +
+  geom_smooth(aes(colour = Sex), method = "lm")
+```
+
+
+
+## aesthetics and attributes
+
+<div style="float: left; width: 30%;">
+- e.g. colour, fill, size, shape, alpha
+- attributes take properties
+- aesthetics take variables
+</div>
+
+<div style="float: right; width: 63%;">
+
+```{r  out.width="97%"}
+ggplot(horses, aes(y = Price, x = Age, colour = Sex)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+
+
+
+
 ## aesthetics and attributes 
 
 ```{r out.width="65%"}
 ggplot(horses, aes(y = Price, x = Age, colour = Sex)) +
-  geom_point() 
+  geom_point(size = 2) 
 ```
 
 
@@ -656,7 +750,7 @@ ggplot(horses, aes(y = Price, x = Age, colour = Sex)) +
 
 ```{r out.width="65%"}
 ggplot(horses, aes(y = Price, x = Age, shape = Sex)) +
-  geom_point()
+  geom_point(size = 2)
 ```
 
 
@@ -664,7 +758,7 @@ ggplot(horses, aes(y = Price, x = Age, shape = Sex)) +
 
 ```{r out.width="65%"}
 ggplot(horses, aes(y = Price, x = Age, colour = Sex, shape = Sex)) +
-  geom_point()
+  geom_point(size = 2)
 ```
 
 
@@ -675,7 +769,7 @@ ggplot(horses, aes(y = Price, x = Age, colour = Sex, shape = Sex)) +
 - some are required by geometries; others are optional
 - continuous vs discrete variables:
     - e.g. shape and label can only be used for categorical values
-- ideally facilitate comprehension
+- use to facilitate comprehension
 
 ---
 
@@ -697,17 +791,21 @@ all_aes[!names(all_aes) %in% ls(envir = env)] <- NULL
 
 ```
 
-```{r}
-all_aes$geom_point
+- scatterplot: geom_point()
+```{r echo = FALSE, results=TRUE}
+cat(paste(all_aes$geom_point, collapse = ", "))
 ```
 
-```{r}
-all_aes$geom_bar
+- barplot: geom_bar()
+```{r echo = FALSE, results=TRUE}
+cat(paste(all_aes$geom_bar, collapse = ", "))
 ```
 
-
-```{r}
-all_aes$geom_boxplot
+- boxplot: geom_boxplot()
+```{r echo = FALSE, results=TRUE}
+x <- paste(all_aes$geom_boxplot, collapse = ", ")
+stri_sub(x, 78, 76) <- "\n"
+cat(x)
 ```
 
 
@@ -728,7 +826,7 @@ all_aes$geom_boxplot
 - lengths
 - angles, slopes
 - areas
-- volumne, monochromatic colour spectrum (saturation, grey scale)
+- volume, monochromatic colour spectrum (saturation, grey scale)
 - pure spectrum colours
 </div>
 
@@ -910,7 +1008,7 @@ ggplot(data = horses, aes(x = Age, y = Price,
 
 - open script **exercises/Exercise 3a.R**
 - read and follow the instructions
-- replace the **____**s accordingly
+- fill in the **_____**s
 - continue with **exercises/Exercise 3b.R**
 - and **exercises/Exercise 3c.R**
 
@@ -920,10 +1018,10 @@ ggplot(data = horses, aes(x = Age, y = Price,
 
 # major visualisation tools 
 
-## major visualisation tools | ~ 50 geometries 
+## major visualisation tools
 
 - visual encoding of aesthetics layer
-- geom_...
+- ~50 geometries: geom_...
 
 ```{r echo = F}
 env <- asNamespace("ggplot2")
@@ -936,19 +1034,21 @@ print(geoms)
 ```
 
 
-## major visualisation tools | ~ 50 geometries 
+## major visualisation tools 
 
 - other packages such as tidybayes and ggridges
 - many can be combined
 - depends on visualisation goal
 - and your subject domain
-- three groups: bivariate and univariate distributions, group comparisons
+- three important groups: 
+  - bivariate distributions 
+  - univariate distributions
+  - group comparisons
 
 ## major visualisation tools | bivariate distribution
 
-
 - function: relationship between two variables
-- variable type: typically continous
+- variable type: typically continuous
 - examples: scatter plot, time series
 
 ## major visualisation tools | scatter plot
@@ -996,14 +1096,12 @@ ggplot(data = covid3, aes(x = Date, y = Deaths, group = Country, colour = Countr
 ```
 
 
-
-
 ## major visualisation tools | univariate distribution
 
 <div style="float: left; width: 40%;">
 
 - function: distribution of values
-- variable type: continous or discrete
+- variable type: continuous or discrete
 - examples: histograms, density plots, bar plots
 
 </div>
@@ -1018,13 +1116,12 @@ ggplot(data = horses, aes(x = Sex)) +
 </div>
 
 
-
 ## major visualisation tools | univariate distribution
 
 <div style="float: left; width: 40%;">
 
 - function: distribution of values
-- variable type: continous or discrete
+- variable type: continuous or discrete
 - examples: histograms, density plots, bar plots
 
 </div>
@@ -1043,7 +1140,7 @@ ggplot(data = horses, aes(x = Price)) +
 <div style="float: left; width: 40%;">
 
 - function: distribution of values
-- variable type: continous or discrete
+- variable type: continuous or discrete
 - examples: histograms, density plots, bar plots
 
 </div>
@@ -1062,7 +1159,7 @@ ggplot(data = horses, aes(x = Price)) +
 ## major visualisation tools | group comparisons
 
 - function: distribution of values for two or more groups (often closely tied to statistical descriptions)
-- variable type: continous 
+- variable type: continuous 
 - examples: points / jitter, box plot, violin plot, barplot (pie chart), dynamite plots
 
 
@@ -1177,23 +1274,15 @@ ggplot(data = horses, aes(y = Price, x = Sex)) +
 
 </div>
 
-
-
 ## exercise 4 | major visualisation tools
 
 - open script **exercises/Exercise 4a.R**
 - read and follow the instructions
-- replace the **___**s accordingly
+- fill in the **_____**s
 - continue with **exercises/Exercise 4b.R**
 
 
-
-
-
 # cosmetics 
-
-
-
 
 ## changing text: labs
 
@@ -1376,11 +1465,11 @@ ggplot(data = horses, aes(y = Price, x = Age,
 
 
 
-## changing text: legend (scale)
+## changing text: legend keys
 
 <div style="float: left; width: 40%;">
 - scale_colour_discrete
-- scale_colour_continous
+- scale_colour_continuous
 - scale_colour_manual
 - or any other aesthetic instead of colour
 </div>
@@ -1392,7 +1481,7 @@ ggplot(data = horses, aes(y = Price, x = Age,
                           colour = Sex)) +
   geom_point() +  
   ###<b>
-  scale_colour_discrete(labels = c("female", "male"))
+  scale_colour_discrete(labels = c("female", "male")) 
   ###</b>
 ```
 
@@ -1400,7 +1489,7 @@ ggplot(data = horses, aes(y = Price, x = Age,
 
 
 
-## changing text: legend (scale)
+## changing text: legend keys
 
 <div style="float: left; width: 40%;">
 - change colour values manually
@@ -1422,7 +1511,7 @@ ggplot(data = horses, aes(y = Price, x = Age,
 </div>
 
 
-## changing text: legend (scale)
+## changing text: legend keys
 
 <div style="float: left; width: 40%;">
 - change colour values manually
@@ -1446,7 +1535,7 @@ ggplot(data = horses, aes(y = Price, x = Age,
 
 
 
-## changing text: legend (scale)
+## changing text: legend keys
 
 <div style="float: left; width: 40%;">
 - change colour values manually
@@ -1464,7 +1553,7 @@ ggplot(data = horses, aes(y = Price, x = Age,
 </div>
 
 
-## changing text: legend (scale)
+## changing text: legend keys
 
 <div style="float: left; width: 40%;">
 - change colour values manually
@@ -1487,7 +1576,7 @@ ggplot(data = horses, aes(y = Price, x = Age,
 </div>
 
 
-## changing text: legend (scale)
+## changing text: legend keys
 
 <div style="float: left; width: 40%;">
 - change colour values manually
@@ -1774,9 +1863,6 @@ ggplot(data = horses, aes(y = Price, x = Age,
 ```
 
 </div>
-
-
-
 
 ## themes: legend
 
@@ -2107,7 +2193,7 @@ ggplot(data = horses, aes(y = Price, x = Age)) +
 - Up-to-date COVID-19 data
 - open script **exercises/Exercise 5a.R**
 - read and follow the instructions
-- replace the **___**s accordingly
+- fill in the **_____**s
 - continue with **exercises/Exercise 5b.R**
 
 
