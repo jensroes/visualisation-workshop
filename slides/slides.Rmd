@@ -47,13 +47,12 @@ slides > slide.backdrop {
 ## house-keeping
 
 - unmute your mic to say hello
-- mute mic, cams off
+- mute mic
 - 4hrs with breaks
 - there will be exercises
-- write questions in the chat
-- R and RStudio needs to be installed: [install R and RStudio](https://www.earthdatascience.org/courses/earth-analytics/document-your-science/setup-r-rstudio/)
-- we use tidyverse (which loads ggplot2 as well)
 - basics assumed but do ask
+- R and RStudio needs to be installed: [install R and RStudio](https://www.earthdatascience.org/courses/earth-analytics/document-your-science/setup-r-rstudio/)
+- tidyverse (loads ggplot2)
 
 
 ## workshop folder
