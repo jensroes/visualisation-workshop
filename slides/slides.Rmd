@@ -46,8 +46,7 @@ slides > slide.backdrop {
 
 ## house-keeping
 
-- unmute your mic to say hello
-- mute mic
+- unmute your mic to say hello (then mute mic)
 - 4hrs with breaks
 - there will be exercises
 - basics assumed but do ask
