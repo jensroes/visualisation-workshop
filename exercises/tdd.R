@@ -4,7 +4,7 @@
 library(tidyverse)
 
 # If you couldn't load tidyverse, run this:
-# install.package("tidyverse")
+# install.packages("tidyverse")
 
 # Load data frame 
 tdd <- read_csv("data/tdd.csv")

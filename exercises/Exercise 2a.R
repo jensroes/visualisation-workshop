@@ -64,8 +64,8 @@ age_range_diff/30 # years per bin
 age_plot + geom_histogram(binwidth = ___)
 
 # Change to 5 and then 10 and observe what happens.
-age_hist + geom_histogram(binwidth = ___)
-age_hist + geom_histogram(binwidth = ___)
+age_plot + geom_histogram(binwidth = ___)
+age_plot + geom_histogram(binwidth = ___)
 
 # The binwidth argument controls the age span within each bar / bin; binwidth = 1 is one year.
 # Instead one can use a density plot: add geom_density() 

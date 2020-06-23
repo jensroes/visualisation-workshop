@@ -2,7 +2,7 @@
 
 # Load tidyverse package (which includes ggplot2 and many other useful functions for data processing)
 # If you haven't installed tidyverse, uncomment and run this line:
-# install.package("tidyverse")
+# install.packages("tidyverse")
 library(tidyverse)
 
 # Load the data
