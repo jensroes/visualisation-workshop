@@ -100,14 +100,14 @@ horses <- read_csv("../data/horses.csv")
 glimpse(horses)
 ```
 
-## scatter plot: relationship between age and price
+## relationship between age and price
 
 ```{r, out.width="65%"}
 ggplot(data = horses, aes(x = Age, y =  Price)) 
 ```
 
 
-## scatter plot: relationship between age and price
+## relationship between age and price
 
 ```{r, out.width="65%"}
 
@@ -119,9 +119,7 @@ ggplot(data = horses, aes(x = Age, y =  Price)) +
 ```
 
 
-
-
-## scatter plot: linear model
+## relationship between age and price
 
 ```{r, out.width="65%"}
 
@@ -134,8 +132,7 @@ ggplot(data = horses, aes(x = Age, y = Price)) +
 ```
 
 
-
-## scatter plot: quadratic model
+## relationship between age and price
 
 ```{r, out.width="65%"}
 
@@ -148,7 +145,7 @@ ggplot(data = horses, aes(x = Age, y = Price)) +
 ```
 
 
-## scatter plot: grouping variable
+## relationship between age and price
 
 ```{r, out.width="65%"}
 ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
@@ -158,7 +155,7 @@ ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
 ```
 
 
-## scatter plot: explanatory plot
+## explanatory plot
 
 ```{r, eval = FALSE}
 ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
@@ -175,7 +172,7 @@ ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
 
 ```
 
-## scatter plot: explanatory plot
+## explanatory plot
 
 ```{r, echo = FALSE, results=TRUE, out.width="80%"}
 ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
@@ -197,14 +194,23 @@ ggplot(data = horses, aes(x = Age, y = Price, colour = Sex)) +
 
 ## why data visualisation? | "[data visualization] forces us to notice what we never expected to see." [@tukey1977exploratory]
 
-- exploring structures in the data (e.g. relationship between two variables)
-- understanding patterns (beyond descriptives)
-- selecting appropriate stats
 - communication of findings
 - persuasion of audience
+- selecting appropriate stats
+- exploring structures in the data (e.g. relationship between two variables)
+- understanding patterns (beyond descriptives)
 
 
 ## Anscombe's quartet | @anscombe1973graphs and @tufte1989
+
+```{r}
+pivot_longer(data = datasets::anscombe, cols = everything(),
+             names_to = c(".value", "Set"), names_pattern = "(.)(.)") %>%
+  head(5)
+```
+
+
+## Anscombe's quartet
 
 
 ```{r echo = F, results="asis"}
